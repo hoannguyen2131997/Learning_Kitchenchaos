@@ -7,11 +7,48 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float rotateSpeed = 10f;
-    [SerializeField] private GameInput gameInput; 
-
+    [SerializeField] private GameInput gameInput;
+    
+    // lowering height raycast orgin to hit raycast for gameobject have lower height
+    [SerializeField] private Vector3 loweringHeightRaycast;
+    [SerializeField] private LayerMask couterLayerMask;
+    
     private bool isWalking;
+    private Vector3 lastInteractDir;
+    
     // Update is called once per frame
     private void Update()
+    {
+        HandleMovement();
+        HandleInteraction();
+    }
+
+    public bool IsWalking()
+    {
+        return isWalking;
+    }
+
+    private void HandleInteraction()
+    {
+        Vector2 inputVector = gameInput.GetVector2Input();
+        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
+        if (moveDir != Vector3.zero)
+        {
+            lastInteractDir = moveDir;
+        }
+        float InteractDistance = 2f;
+        //bool checkRaycastHit = Physics.Raycast(transform.position, moveDir, out RaycastHit raycastHit, InteractDistance);
+        if (Physics.Raycast(transform.position - loweringHeightRaycast, lastInteractDir, out RaycastHit raycastHit, InteractDistance))
+        {
+            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+            {
+                // Has ClearCounter
+                clearCounter.Interact();
+            }
+        }
+    }
+
+    private void HandleMovement()
     {
         Vector2 inputVector = gameInput.GetVector2Input();
         Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
@@ -57,10 +94,5 @@ public class Player : MonoBehaviour
         isWalking = moveDir != Vector3.zero;
         //transform.position += moveDir * moveSpeed * Time.deltaTime;
         transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
-    }
-
-    public bool IsWalking()
-    {
-        return isWalking;
     }
 }
