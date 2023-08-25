@@ -15,8 +15,31 @@ public class Player : MonoBehaviour
     
     private bool isWalking;
     private Vector3 lastInteractDir;
-    
-    // Update is called once per frame
+
+    private void Start()
+    {
+        gameInput.OnInteractAction += GameInput_Oninteraction;
+    }
+
+    private void GameInput_Oninteraction(object sender, EventArgs e)
+    {
+        Vector2 inputVector = gameInput.GetVector2Input();
+        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
+        if (moveDir != Vector3.zero)
+        {
+            lastInteractDir = moveDir;
+        }
+        float InteractDistance = 2f;
+        //bool checkRaycastHit = Physics.Raycast(transform.position, moveDir, out RaycastHit raycastHit, InteractDistance);
+        if (Physics.Raycast(transform.position - loweringHeightRaycast, lastInteractDir, out RaycastHit raycastHit, InteractDistance))
+        {
+            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+            {
+                // Has ClearCounter
+            }
+        }
+    }
+
     private void Update()
     {
         HandleMovement();
