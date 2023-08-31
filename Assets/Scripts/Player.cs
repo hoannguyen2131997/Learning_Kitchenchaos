@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IKitchenObjectParent
 {
     public static Player Instance { get; private set; }
     
@@ -16,14 +17,16 @@ public class Player : MonoBehaviour
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float rotateSpeed = 10f;
     [SerializeField] private GameInput gameInput;
-    
+
     // lowering height raycast orgin to hit raycast for gameobject have lower height
     [SerializeField] private Vector3 loweringHeightRaycast;
     [SerializeField] private LayerMask couterLayerMask;
+    [SerializeField] private Transform kitchenObjectHoldPoint;
     
     private bool isWalking;
     private Vector3 lastInteractDir;
     private ClearCounter selectedCounter;
+    private KitchenObject kitchenObject;
 
     private void Awake()
     {
@@ -43,7 +46,7 @@ public class Player : MonoBehaviour
     {
         if (selectedCounter != null)
         {
-            selectedCounter.Interact();
+            selectedCounter.Interact(this);
         }
     }
 
@@ -139,10 +142,39 @@ public class Player : MonoBehaviour
 
     private void SetSelectedCounter(ClearCounter selectedCounter)
     {
+        if (selectedCounter != null && HasKitchenObject() == false)
+        {
+            selectedCounter.Interact(this);
+        }
         this.selectedCounter = selectedCounter;
         OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs()
         {
             selectedCounter = selectedCounter
         });
+    }
+    
+    public Transform GetKitchenObjectFollowTransform()
+    {
+        return kitchenObjectHoldPoint;
+    }
+    
+    public void SetKitchenObject(KitchenObject _kitchenObject)
+    {
+        this.kitchenObject = _kitchenObject;
+    }
+
+    public KitchenObject GetKitchenObject()
+    {
+        return kitchenObject;
+    }
+    
+    public void ClearKitchenObject()
+    {
+        kitchenObject = null;
+    }
+
+    public bool HasKitchenObject()
+    {
+        return kitchenObject != null;
     }
 }

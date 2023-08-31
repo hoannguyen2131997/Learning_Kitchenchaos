@@ -16,7 +16,7 @@ public class SelectedCounterVisual : MonoBehaviour
     {
         if (e.selectedCounter == _clearCounter)
         {
-            _clearCounter.Interact();
+            //_clearCounter.Interact();
             Show();
         }
         else
