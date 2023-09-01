@@ -2,21 +2,32 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class SelectedCounterVisual : MonoBehaviour
 {
-    [SerializeField] private ClearCounter _clearCounter;
-    [SerializeField] private GameObject visualGameObject;
+    [SerializeField] private BaseCounter baseCounter;
+    [SerializeField] private GameObject[] visualGameObjectArray;
     private void Start()
     {
-        Player.Instance.OnSelectedCounterChanged += Player_OnSelectedConterChanged;
+        Player.Instance.OnSelectedCounterChanged += Player_OnSelectedContainerChanged;
     }
 
-    private void Player_OnSelectedConterChanged(object sender, Player.OnSelectedCounterChangedEventArgs e)
+    private void Player_OnSelectedContainerChanged(object sender, Player.OnSelectedCounterChangedEventArgs e)
     {
-        if (e.selectedCounter == _clearCounter)
+        if (e.selectedCounter == baseCounter)
         {
-            //_clearCounter.Interact();
+#if ENABLE_DEBUG_LOG_CHECK_NULL
+            if (_clearCounter != null)
+            {
+                _clearCounter.Interact(Player.Instance);
+            }
+
+             else
+            {
+                Debug.Log($"Null object: {_clearCounter}");
+            }
+#endif
             Show();
         }
         else
@@ -27,10 +38,16 @@ public class SelectedCounterVisual : MonoBehaviour
 
     private void Show()
     {
-        visualGameObject.SetActive(true);
+        foreach (GameObject visualGameObject in visualGameObjectArray)
+        {
+            visualGameObject.SetActive(true);
+        }
     }
     private void Hide()
     {
-        visualGameObject.SetActive(false);
+        foreach (GameObject visualGameObject in visualGameObjectArray)
+        {
+            visualGameObject.SetActive(false);
+        }
     }
 }

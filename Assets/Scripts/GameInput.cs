@@ -20,8 +20,7 @@ public class GameInput : MonoBehaviour
     {
         OnInteractAction?.Invoke(this, EventArgs.Empty);
     }
-
-
+    
     public Vector2 GetVector2Input()
     {
         Vector2 inputVector = _playerController.Player.Movement.ReadValue<Vector2>();
