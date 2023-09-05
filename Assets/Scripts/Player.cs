@@ -28,6 +28,11 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     private BaseCounter selectedCounter;
     private KitchenObject kitchenObject;
 
+    // Check point
+    private Vector3 CheckPoint1;
+    private Vector3 CheckPoint2;
+    private bool canMove;
+
     private void Awake()
     {
         if (Instance != null)
@@ -53,6 +58,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     private void Update()
     {
         HandleMovement();
+        CheckPoint();
         HandleInteraction();
     }
 
@@ -92,6 +98,19 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         }
     }
 
+    private void CheckPoint()
+    {
+        Vector2 inputVector = gameInput.GetVector2Input();
+        CheckPosition.Instance.Vector2MoveDir.x = inputVector.x;
+        CheckPosition.Instance.Vector2MoveDir.y = inputVector.y;
+
+        CheckPosition.Instance.CheckPoint1 = CheckPoint1;
+        CheckPosition.Instance.CheckPoint2 = CheckPoint2;
+        CheckPosition.Instance.MoveForward = transform.forward;
+        CheckPosition.Instance.CanMove = canMove;
+        CheckPosition.Instance.IsWalking = isWalking;
+    }
+
     private void HandleMovement()
     {
         Vector2 inputVector = gameInput.GetVector2Input();
@@ -99,14 +118,16 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         float moveDistance = moveSpeed * Time.deltaTime;
         float playerHeight = 2f;
         float playerRadius = .7f;
-        bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, moveDistance);
+        canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, moveDistance);
+        CheckPoint1 = transform.position;
+        CheckPoint2 = transform.position + Vector3.up * playerHeight;
         if (!canMove)
         {
             // Cannot move towards moveDir
             
             // Attempt only X movement
             Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
-            canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, moveDistance);
+            canMove = !Physics.CapsuleCast(CheckPoint1, CheckPoint2, playerRadius, moveDir, moveDistance);
 
             if (canMove)
             {
@@ -119,7 +140,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
                 
                 // Attempt only Z movement
                 Vector3 moveDirZ = new Vector3(0, 0, moveDir.z).normalized;
-                canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, moveDistance);
+                canMove = !Physics.CapsuleCast(CheckPoint1, CheckPoint2, playerRadius, moveDir, moveDistance);
 
                 if (canMove)
                 {
