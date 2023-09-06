@@ -44,4 +44,12 @@ public class CuttingCounter : BaseCounter
             KitchenObject.SpawnKitchenObject(cutKitchenObjectSO, this);
         }
     }
+
+    public override void TestInteract(Player _player)
+    {
+        if (HasKitchenObject())
+        {
+            Debug.Log("Hoan - Test Interact");
+        }
+    }
 }

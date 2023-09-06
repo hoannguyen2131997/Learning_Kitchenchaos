@@ -8,6 +8,9 @@ public class GameInput : MonoBehaviour
 {
     public event EventHandler OnInteractAction;
     public event EventHandler OnInteractAlternateAction;
+
+    public event EventHandler OnTest;
+    
     private PlayerController _playerController;
     private void Awake()
     {
@@ -16,6 +19,12 @@ public class GameInput : MonoBehaviour
 
         _playerController.Player.Interact.performed += Interact_performed;
         _playerController.Player.InteractAlternate.performed += InteractAlternate;
+        _playerController.Player.Test.performed += Test_performed;
+    }
+
+    private void Test_performed(InputAction.CallbackContext obj)
+    {
+        OnTest?.Invoke(this, EventArgs.Empty);
     }
 
     private void InteractAlternate(InputAction.CallbackContext obj)
