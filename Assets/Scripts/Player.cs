@@ -45,6 +45,15 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     private void Start()
     {
         gameInput.OnInteractAction += GameInput_Oninteraction;
+        gameInput.OnInteractAlternateAction += GameInput_OnInteractAlternatetion;
+    }
+
+    private void GameInput_OnInteractAlternatetion(object sender, EventArgs e)
+    {
+        if (selectedCounter != null)
+        {
+            selectedCounter.InteractAlternate(this);
+        }
     }
 
     private void GameInput_Oninteraction(object sender, EventArgs e)
@@ -125,9 +134,9 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         {
             // Cannot move towards moveDir
             
-            // Attempt only X movement
+            // Attempt only X movement, moveDir.x != 0 mean player only interact when input player is forward counter, example when player capsule cast with counter : (1,0) -> interact, but (0,1) not trigger interact
             Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
-            canMove = !Physics.CapsuleCast(CheckPoint1, CheckPoint2, playerRadius, moveDir, moveDistance);
+            canMove = moveDir.x != 0 && !Physics.CapsuleCast(CheckPoint1, CheckPoint2, playerRadius, moveDir, moveDistance);
 
             if (canMove)
             {
@@ -140,7 +149,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
                 
                 // Attempt only Z movement
                 Vector3 moveDirZ = new Vector3(0, 0, moveDir.z).normalized;
-                canMove = !Physics.CapsuleCast(CheckPoint1, CheckPoint2, playerRadius, moveDir, moveDistance);
+                canMove = moveDir.z != 0 && !Physics.CapsuleCast(CheckPoint1, CheckPoint2, playerRadius, moveDir, moveDistance);
 
                 if (canMove)
                 {
