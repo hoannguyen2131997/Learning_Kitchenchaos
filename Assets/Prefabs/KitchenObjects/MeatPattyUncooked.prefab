@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b37e073d503a8d347a0c063ed21ead05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kitchenObjectSo: {fileID: 11400000, guid: 3cab77df26f0a4b48b3244d691517233, type: 2}
+  kitchenObjectSo: {fileID: 11400000, guid: 2cadc9b2ed5c3c246aa470e89f48e06f, type: 2}
 --- !u!1001 &2109238864881287678
 PrefabInstance:
   m_ObjectHideFlags: 0
