@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,18 @@ using UnityEngine;
 public class CuttingCounter : BaseCounter
 {
     [SerializeField] private CuttingRecipeSO[] cuttingRecipeSOArray;
+
+    private int _cuttingProgress;
+
+    public event EventHandler<OnProgressChangedEventArgs> OnProgressChanged;
+
+    public class OnProgressChangedEventArgs : EventArgs
+    {
+        public float progressNormalized;
+    }
+
+    public event EventHandler OnCut;
+    
     public override void Interact(Player _player)
     {
         if (!HasKitchenObject())
@@ -15,8 +28,16 @@ public class CuttingCounter : BaseCounter
                 // Player is carrying something
                 if (HasRecipeWithInput(_player.GetKitchenObject().GetKitchenObjectSO()))
                 {
-                    // Player is carrying something
+                    // Player is carrying something that can be cut
                     _player.GetKitchenObject().SetKitchenObjectParent(this);
+                    _cuttingProgress = 0;
+                    
+                    CuttingRecipeSO cuttingRecipeSo = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
+                    
+                    OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs
+                    {
+                        progressNormalized = (float)_cuttingProgress / cuttingRecipeSo.cuttingProgressMax
+                    });
                 }
             }
             else
@@ -43,10 +64,24 @@ public class CuttingCounter : BaseCounter
     {
         if (HasKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO()))
         {
-            // There is a KitchenObject here
-            KitchenObjectSO outputKitchenObjectSO = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO());
-            GetKitchenObject().DestroySelf();
-            KitchenObject.SpawnKitchenObject(outputKitchenObjectSO, this);
+            // There is a KitchenObject here and it can be cut
+            _cuttingProgress++;
+
+            OnCut?.Invoke(this, EventArgs.Empty);
+            
+            CuttingRecipeSO cuttingRecipeSo = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
+
+            OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs
+            {
+                progressNormalized = (float)_cuttingProgress / cuttingRecipeSo.cuttingProgressMax
+            });
+            
+            if (_cuttingProgress >= cuttingRecipeSo.cuttingProgressMax)
+            {
+                KitchenObjectSO outputKitchenObjectSO = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO());
+                GetKitchenObject().DestroySelf();
+                KitchenObject.SpawnKitchenObject(outputKitchenObjectSO, this);
+            }
         }
     }
 
@@ -58,25 +93,32 @@ public class CuttingCounter : BaseCounter
         }
     }
 
-    private bool HasRecipeWithInput(KitchenObjectSO inputKitchenObjectSO)
+    private bool HasRecipeWithInput(KitchenObjectSO _inputKitchenObjectSO)
     {
-        foreach (CuttingRecipeSO cuttingRecipeSO in cuttingRecipeSOArray)
-        {
-            if (cuttingRecipeSO.Input == inputKitchenObjectSO)
-            {
-                return true;
-            }
-        }
-        return false;
+        CuttingRecipeSO cuttingRecipeSo = GetCuttingRecipeSOWithInput(_inputKitchenObjectSO);
+        return cuttingRecipeSo != null;
     }
 
-    private KitchenObjectSO GetOutputForInput(KitchenObjectSO inputKitchenObjectSO)
+    private KitchenObjectSO GetOutputForInput(KitchenObjectSO _inputKitchenObjectSO)
     {
-        foreach (CuttingRecipeSO cuttingRecipeSO in cuttingRecipeSOArray)
+        CuttingRecipeSO cuttingRecipeSo = GetCuttingRecipeSOWithInput(_inputKitchenObjectSO);
+        if (cuttingRecipeSo != null)
         {
-            if (cuttingRecipeSO.Input == inputKitchenObjectSO)
+            return cuttingRecipeSo.Output;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private CuttingRecipeSO GetCuttingRecipeSOWithInput(KitchenObjectSO inputKitchenObjectSo)
+    {
+        foreach (var cuttingRecipeSo in cuttingRecipeSOArray)
+        {
+            if (cuttingRecipeSo.Input == inputKitchenObjectSo)
             {
-                return cuttingRecipeSO.Output;
+                return cuttingRecipeSo;
             }
         }
         return null;
