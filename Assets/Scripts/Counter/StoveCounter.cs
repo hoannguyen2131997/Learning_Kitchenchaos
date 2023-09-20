@@ -3,9 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StoveCounter : BaseCounter
+public class StoveCounter : BaseCounter, IHasProgress
 {
-    private enum State
+    public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
+    public event EventHandler<OnStateChangedEventArgs> OnStateChanged;
+    public class OnStateChangedEventArgs : EventArgs
+    {
+        public State state;
+    }
+    public enum State
     {
         Idle,
         Frying,
@@ -21,7 +27,7 @@ public class StoveCounter : BaseCounter
     private float burningTimer;
     private FryingRecipeSO fryingRecipeSO;
     private BurningRecipeSO burningRecipeSO;
-
+    private int _StovingProgress;
     private void Start()
     {
         state = State.Idle;
@@ -50,37 +56,55 @@ public class StoveCounter : BaseCounter
     private void FryingObject()
     {
         fryingTimer += Time.deltaTime;
+        
+        OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+        {
+            progressNormalized = (float)fryingTimer / fryingRecipeSO.FryingTimerMax
+        });
+        
         if (fryingTimer > fryingRecipeSO.FryingTimerMax)
         {
             // Fried
             fryingTimer = 0f;
-            Debug.Log("Fried!");
             GetKitchenObject().DestroySelf();
-
             KitchenObject.SpawnKitchenObject(fryingRecipeSO.Output, this);
-            
-            Debug.Log("Object fried!");
-            
             state = State.Fried;
             burningTimer = 0f;
             burningRecipeSO = GetBurningRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
+            
+            OnStateChanged?.Invoke(this, new OnStateChangedEventArgs
+            {
+                state = state
+            });
         }
     }
 
     private void BurningObject()
     {
         burningTimer += Time.deltaTime;
+        
+        OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+        {
+            progressNormalized = (float)burningTimer / burningRecipeSO.BurningTimerMax
+        });
+        
         if (burningTimer > burningRecipeSO.BurningTimerMax)
         {
-            // Fried
+            // Burned
             burningTimer = 0f;
-            Debug.Log("Fried!");
             GetKitchenObject().DestroySelf();
-
             KitchenObject.SpawnKitchenObject(burningRecipeSO.Output, this);
-            
-            Debug.Log("Object burned!");
             state = State.Burned;
+            
+            OnStateChanged?.Invoke(this, new OnStateChangedEventArgs
+            {
+                state = state
+            });
+        
+            OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+            {
+                progressNormalized = 0f
+            });
         }
     }
 
@@ -102,6 +126,16 @@ public class StoveCounter : BaseCounter
 
                     state = State.Frying;
                     fryingTimer = 0f;
+                    
+                    OnStateChanged?.Invoke(this, new OnStateChangedEventArgs
+                    {
+                        state = state
+                    });
+                    
+                    OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+                    {
+                        progressNormalized = (float)fryingTimer / fryingRecipeSO.FryingTimerMax
+                    });
                 }
             }
             else
@@ -120,6 +154,18 @@ public class StoveCounter : BaseCounter
             {
                 // Player is not carrying anything
                 GetKitchenObject().SetKitchenObjectParent(_player);
+
+                state = State.Idle;
+                
+                OnStateChanged?.Invoke(this, new OnStateChangedEventArgs
+                {
+                    state = state
+                });
+                
+                OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+                {
+                    progressNormalized = 0f
+                });
             }
         }
     }
