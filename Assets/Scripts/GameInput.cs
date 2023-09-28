@@ -8,7 +8,6 @@ public class GameInput : MonoBehaviour
 {
     public event EventHandler OnInteractAction;
     public event EventHandler OnInteractAlternateAction;
-
     public event EventHandler OnTest;
     
     private PlayerController _playerController;
