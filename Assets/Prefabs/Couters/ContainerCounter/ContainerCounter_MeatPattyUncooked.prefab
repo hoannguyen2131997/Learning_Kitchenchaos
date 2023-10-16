@@ -13,6 +13,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: aa1bacc24dde76e47b2ec0dd4e82385b,
         type: 3}
+    - target: {fileID: 942181341404538358, guid: f200ab494e8f35044b5bff6b1503c495,
+        type: 3}
+      propertyPath: visualGameObjectArray.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 942181341404538358, guid: f200ab494e8f35044b5bff6b1503c495,
+        type: 3}
+      propertyPath: visualGameObjectArray.Array.data[0]
+      value: 
+      objectReference: {fileID: 9165684656708230300}
+    - target: {fileID: 942181341404538358, guid: f200ab494e8f35044b5bff6b1503c495,
+        type: 3}
+      propertyPath: visualGameObjectArray.Array.data[1]
+      value: 
+      objectReference: {fileID: 7082412752151163669}
     - target: {fileID: 4092601090178440897, guid: f200ab494e8f35044b5bff6b1503c495,
         type: 3}
       propertyPath: kitchenObjectSO
@@ -87,3 +102,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f200ab494e8f35044b5bff6b1503c495, type: 3}
+--- !u!1 &7082412752151163669 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3993440630423076711, guid: f200ab494e8f35044b5bff6b1503c495,
+    type: 3}
+  m_PrefabInstance: {fileID: 6134542367380737138}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &9165684656708230300 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3031283626265776366, guid: f200ab494e8f35044b5bff6b1503c495,
+    type: 3}
+  m_PrefabInstance: {fileID: 6134542367380737138}
+  m_PrefabAsset: {fileID: 0}

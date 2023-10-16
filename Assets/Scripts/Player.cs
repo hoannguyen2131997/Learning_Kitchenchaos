@@ -14,8 +14,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         public BaseCounter selectedCounter;
     }
     
-    [SerializeField] private float moveSpeed = 7f;
-    [SerializeField] private float rotateSpeed = 10f;
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private float rotateSpeed;
     [SerializeField] private GameInput gameInput;
 
     // lowering height raycast orgin to hit raycast for gameobject have lower height
