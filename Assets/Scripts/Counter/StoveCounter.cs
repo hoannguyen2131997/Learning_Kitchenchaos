@@ -116,7 +116,7 @@ public class StoveCounter : BaseCounter, IHasProgress
             if (_player.HasKitchenObject())
             {
                 // Player is carrying something
-                Debug.Log(HasRecipeWithInput(_player.GetKitchenObject().GetKitchenObjectSO()));
+                //Debug.Log(HasRecipeWithInput(_player.GetKitchenObject().GetKitchenObjectSO()));
                 if (HasRecipeWithInput(_player.GetKitchenObject().GetKitchenObjectSO()))
                 {
                     // Player is carrying something that can be cut
