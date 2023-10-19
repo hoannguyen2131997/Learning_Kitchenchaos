@@ -11,6 +11,11 @@ public class CuttingCounter : BaseCounter, IHasProgress
     public event EventHandler OnCut;
     public static event EventHandler OnAnyCut;
 
+    new public static void ResetStaticData()
+    {
+        OnAnyCut = null;
+    }
+
     public override void Interact(Player _player)
     {
         if (!HasKitchenObject())
@@ -69,7 +74,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
             _cuttingProgress++;
 
             OnCut?.Invoke(this, EventArgs.Empty);
-            
+            Debug.Log(OnAnyCut.GetInvocationList().Length);
             OnAnyCut?.Invoke(this, EventArgs.Empty);
             
             CuttingRecipeSO cuttingRecipeSo = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());

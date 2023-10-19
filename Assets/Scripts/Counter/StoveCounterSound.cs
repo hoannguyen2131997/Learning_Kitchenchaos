@@ -16,6 +16,7 @@ public class StoveCounterSound : MonoBehaviour
 
     private void Start()
     {
+        audioSource.Pause();
         _stoveCounter.OnStateChanged += StoveCounter_OnStateChanged;
     }
 
