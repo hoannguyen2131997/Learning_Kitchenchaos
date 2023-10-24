@@ -80,6 +80,24 @@ public partial class @PlayerController : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""JoystickLeft"",
+                    ""type"": ""Value"",
+                    ""id"": ""f2034f86-9264-4b78-a056-9d10b5f6d82d"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""JoystickRight"",
+                    ""type"": ""Value"",
+                    ""id"": ""cefac881-88ec-4a80-bac6-877acbd4f4b4"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -247,6 +265,28 @@ public partial class @PlayerController : IInputActionCollection2, IDisposable
                     ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""071874e6-dd13-41f8-980e-82b4bd72235e"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""JoystickLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""08d8f9ad-e7a2-46e0-b624-2916a7e86758"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""JoystickRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -261,6 +301,8 @@ public partial class @PlayerController : IInputActionCollection2, IDisposable
         m_Player_InteractAlternate = m_Player.FindAction("InteractAlternate", throwIfNotFound: true);
         m_Player_Test = m_Player.FindAction("Test", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
+        m_Player_JoystickLeft = m_Player.FindAction("JoystickLeft", throwIfNotFound: true);
+        m_Player_JoystickRight = m_Player.FindAction("JoystickRight", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -326,6 +368,8 @@ public partial class @PlayerController : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_InteractAlternate;
     private readonly InputAction m_Player_Test;
     private readonly InputAction m_Player_Pause;
+    private readonly InputAction m_Player_JoystickLeft;
+    private readonly InputAction m_Player_JoystickRight;
     public struct PlayerActions
     {
         private @PlayerController m_Wrapper;
@@ -336,6 +380,8 @@ public partial class @PlayerController : IInputActionCollection2, IDisposable
         public InputAction @InteractAlternate => m_Wrapper.m_Player_InteractAlternate;
         public InputAction @Test => m_Wrapper.m_Player_Test;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
+        public InputAction @JoystickLeft => m_Wrapper.m_Player_JoystickLeft;
+        public InputAction @JoystickRight => m_Wrapper.m_Player_JoystickRight;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -363,6 +409,12 @@ public partial class @PlayerController : IInputActionCollection2, IDisposable
                 @Pause.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
                 @Pause.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
                 @Pause.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @JoystickLeft.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJoystickLeft;
+                @JoystickLeft.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJoystickLeft;
+                @JoystickLeft.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJoystickLeft;
+                @JoystickRight.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJoystickRight;
+                @JoystickRight.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJoystickRight;
+                @JoystickRight.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJoystickRight;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -385,6 +437,12 @@ public partial class @PlayerController : IInputActionCollection2, IDisposable
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
+                @JoystickLeft.started += instance.OnJoystickLeft;
+                @JoystickLeft.performed += instance.OnJoystickLeft;
+                @JoystickLeft.canceled += instance.OnJoystickLeft;
+                @JoystickRight.started += instance.OnJoystickRight;
+                @JoystickRight.performed += instance.OnJoystickRight;
+                @JoystickRight.canceled += instance.OnJoystickRight;
             }
         }
     }
@@ -397,5 +455,7 @@ public partial class @PlayerController : IInputActionCollection2, IDisposable
         void OnInteractAlternate(InputAction.CallbackContext context);
         void OnTest(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
+        void OnJoystickLeft(InputAction.CallbackContext context);
+        void OnJoystickRight(InputAction.CallbackContext context);
     }
 }
