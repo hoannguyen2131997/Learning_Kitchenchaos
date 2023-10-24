@@ -46,7 +46,6 @@ public class GameStartCountDownUI : MonoBehaviour
             previousCountDownNumber = countDownNumber;
             _animator.SetTrigger(NUMBER_POPUP);
             SoundManager.Instance.PlayCountDownSound();
-            
         }
     }
 

@@ -74,7 +74,6 @@ public class CuttingCounter : BaseCounter, IHasProgress
             _cuttingProgress++;
 
             OnCut?.Invoke(this, EventArgs.Empty);
-            Debug.Log(OnAnyCut.GetInvocationList().Length);
             OnAnyCut?.Invoke(this, EventArgs.Empty);
             
             CuttingRecipeSO cuttingRecipeSo = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());

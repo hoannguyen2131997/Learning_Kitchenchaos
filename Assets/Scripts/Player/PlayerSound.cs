@@ -22,7 +22,6 @@ public class PlayerSound : MonoBehaviour
             footstepTimer = footstepTimerMax;
             if (_player.IsWalking())
             {
-                Debug.Log($"Volumn's value sound foot: {SoundManager.Instance.GetVolumeSound()}");
                 SoundManager.Instance.PlayFootstepsSound(_player.transform.position);   
             }
         }

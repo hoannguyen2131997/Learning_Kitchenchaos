@@ -80,7 +80,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     private void Update()
     {
         HandleMovement();
-        CheckPoint();
         HandleInteraction();
     }
 
@@ -120,18 +119,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         }
     }
 
-    private void CheckPoint()
-    {
-        Vector2 inputVector = gameInput.GetVector2Input();
-        CheckPosition.Instance.Vector2MoveDir.x = inputVector.x;
-        CheckPosition.Instance.Vector2MoveDir.y = inputVector.y;
-
-        CheckPosition.Instance.CheckPoint1 = CheckPoint1;
-        CheckPosition.Instance.CheckPoint2 = CheckPoint2;
-        CheckPosition.Instance.MoveForward = transform.forward;
-        CheckPosition.Instance.CanMove = canMove;
-        CheckPosition.Instance.IsWalking = isWalking;
-    }
+   
 
     private void HandleMovement()
     {
@@ -180,7 +168,10 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         }
         isWalking = moveDir != Vector3.zero;
         //transform.position += moveDir * moveSpeed * Time.deltaTime;
-        transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
+        if (transform.forward != Vector3.zero)
+        {
+            transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
+        }
     }
 
     private void SetSelectedCounter(BaseCounter selectedCounter)
