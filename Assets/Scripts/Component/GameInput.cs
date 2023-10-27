@@ -64,11 +64,11 @@ public class GameInput : MonoBehaviour
         
         if (inputVectorMove != Vector2.zero)
         {
-            inputVectorMove = inputVectorMove.normalized;
+            //inputVectorMove = inputVectorMove.normalized;
             return inputVectorMove;
         }
         
-        inputVectorLeftJoystick = inputVectorLeftJoystick.normalized;
+        //inputVectorLeftJoystick = inputVectorLeftJoystick.normalized;
         return inputVectorLeftJoystick;
     }
 }

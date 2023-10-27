@@ -136,7 +136,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
             // Cannot move towards moveDir
             
             // Attempt only X movement, moveDir.x != 0 mean player only interact when input player is forward counter, example when player capsule cast with counter : (1,0) -> interact, but (0,1) not trigger interact
-            Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
+            Vector3 moveDirX = new Vector3(moveDir.x, 0, 0);
             canMove = moveDir.x != 0 && !Physics.CapsuleCast(CheckPoint1, CheckPoint2, playerRadius, moveDir, moveDistance);
 
             if (canMove)
@@ -149,7 +149,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
                 // Cannot move only on the X
                 
                 // Attempt only Z movement
-                Vector3 moveDirZ = new Vector3(0, 0, moveDir.z).normalized;
+                Vector3 moveDirZ = new Vector3(0, 0, moveDir.z);
                 canMove = moveDir.z != 0 && !Physics.CapsuleCast(CheckPoint1, CheckPoint2, playerRadius, moveDir, moveDistance);
 
                 if (canMove)

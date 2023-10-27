@@ -7,7 +7,7 @@ public class DeliVeryManagerUI : MonoBehaviour
 {
     [SerializeField] private Transform container;
     [SerializeField] private Transform recipeTemplete;
-
+   
     private void Awake()
     {
         recipeTemplete.gameObject.SetActive(false);
@@ -17,32 +17,32 @@ public class DeliVeryManagerUI : MonoBehaviour
     {
         DeliveryManager.Instance.OnRecipeSpawned += DeliveryManager_OnRecipeSpawned;
         DeliveryManager.Instance.OnRecipeComplete += DeliveryManager_OnRecipeComplete;
-        UpdateVisual();
     }
 
-    private void DeliveryManager_OnRecipeComplete(object sender, EventArgs e)
+    private void DeliveryManager_OnRecipeComplete(object sender,  DeliveryManager.OnRecipetCompleteAddedEventArgs e)
     {
-        UpdateVisual();
+        int n = DeliveryManager.Instance.GetTransRecipeSOList().Count;
+        for (int i = 0; i < n; i++)
+        {
+            if (i == e.index)
+            {
+                DeliveryManager.Instance.GetTransRecipeSOList()[i].gameObject.SetActive(false);
+                DeliveryManager.Instance.GetTransRecipeSOList()[i].SetParent(RecipeTempletePool.Instance.GetTrasParent());
+                return;
+            }
+        }
     }
 
     private void DeliveryManager_OnRecipeSpawned(object sender, EventArgs e)
     {
-        UpdateVisual();
-    }
-
-    private void UpdateVisual()
-    {
-        foreach (Transform child in container)
+        foreach (Transform transObjectItem in DeliveryManager.Instance.GetTransRecipeSOList())
         {
-            if(child == recipeTemplete) continue;
-            Destroy(child.gameObject);
-        }
-
-        foreach (RecipeSO recipeSo in DeliveryManager.Instance.GetWaitingRecipeSOList())
-        {
-            Transform recipeTransform = Instantiate(recipeTemplete, container);
-            recipeTransform.gameObject.SetActive(true);
-            recipeTransform.gameObject.GetComponent<DeliverySingleUI>().SetRecipeSO(recipeSo);
+            if (transObjectItem.gameObject.activeSelf == false)
+            {
+                transObjectItem.SetParent(container);
+                transObjectItem.gameObject.SetActive(true);
+                return;
+            }
         }
     }
 }
