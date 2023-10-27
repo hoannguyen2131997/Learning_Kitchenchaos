@@ -69,13 +69,22 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "JoystickRight",
-                    "type": "Value",
-                    "id": "cefac881-88ec-4a80-bac6-877acbd4f4b4",
-                    "expectedControlType": "Vector2",
+                    "name": "OnInteract",
+                    "type": "Button",
+                    "id": "06a685ae-87fd-4dca-850f-d8b976d8a167",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CutInteract",
+                    "type": "Button",
+                    "id": "72de6a0e-6122-4ec7-a90e-4dada8c4bffa",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -235,8 +244,8 @@
                 },
                 {
                     "name": "",
-                    "id": "b9f98cf2-ff90-4ea2-b793-a88a49215445",
-                    "path": "<Keyboard>/escape",
+                    "id": "9f64061e-8834-4ed4-b014-4a96eff0e21a",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -257,12 +266,23 @@
                 },
                 {
                     "name": "",
-                    "id": "08d8f9ad-e7a2-46e0-b624-2916a7e86758",
-                    "path": "<Gamepad>/rightStick",
+                    "id": "5c789ce6-a4f3-45aa-ac4a-064b4e0f5510",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "JoystickRight",
+                    "action": "OnInteract",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8e556a12-6019-4037-8188-77c41519dd0c",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CutInteract",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
