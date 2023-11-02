@@ -19,3 +19,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6023a05f4ccfbea49afc9bc05d1807ff, type: 2}
   - {fileID: 11400000, guid: 0f95a174121740446b831e42a747d324, type: 2}
   RecipeName: MEGABurger
+  Value: 5

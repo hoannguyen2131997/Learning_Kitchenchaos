@@ -6,6 +6,22 @@ using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour, IKitchenObjectParent
 {
+    public int coins;
+    public float timer;
+   
+    public void SavePlayer()
+    {
+        SaveSystem.SavePlayer(this);
+    }
+
+    public void LoadPlayer()
+    {
+        PlayerData data = SaveSystem.LoadPlayer();
+
+        coins = data.coins;
+        timer = data.timer;
+    }
+    
     public static Player Instance { get; private set; }
     public event EventHandler OnPickedSomething;
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
@@ -14,8 +30,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         public BaseCounter selectedCounter;
     }
     
-    [SerializeField] private float moveSpeed;
-    [SerializeField] private float rotateSpeed;
     [SerializeField] private GameInput gameInput;
 
     // lowering height raycast orgin to hit raycast for gameobject have lower height
@@ -23,16 +37,10 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     [SerializeField] private LayerMask couterLayerMask;
     [SerializeField] private Transform kitchenObjectHoldPoint;
     
-    private bool isWalking;
     private Vector3 lastInteractDir;
     private BaseCounter selectedCounter;
     private KitchenObject kitchenObject;
-
-    // Check point
-    private Vector3 CheckPoint1;
-    private Vector3 CheckPoint2;
-    private bool canMove;
-
+    
     private void Awake()
     {
         if (Instance != null)
@@ -46,15 +54,18 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     {
         gameInput.OnInteractAction += GameInput_Oninteraction;
         gameInput.OnInteractAlternateAction += GameInput_OnInteractAlternatetion;
-        gameInput.OnTest += GameInput_OnTest;
+        DeliveryManager.Instance.OnGetCoinPlayer += DeliveryManager_OnGetCoinPlayer;
     }
 
-    private void GameInput_OnTest(object sender, EventArgs e)
+    private void DeliveryManager_OnGetCoinPlayer(object sender, DeliveryManager.OnGetCoinPlayerEventArgs e)
     {
-        if (selectedCounter != null)
-        {
-            selectedCounter.TestInteract(this);
-        }
+        coins += e.coinsReceived;
+        CollectionCoins(e.coinsReceived);
+    }
+    
+    private async void CollectionCoins(int coin)
+    {
+        await CoinManagerUI.Instance.CollectionCoinsAnimation(coin);
     }
 
     private void GameInput_OnInteractAlternatetion(object sender, EventArgs e)
@@ -79,13 +90,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void Update()
     {
-        HandleMovement();
         HandleInteraction();
-    }
-
-    public bool IsWalking()
-    {
-        return isWalking;
     }
 
     private void HandleInteraction()
@@ -116,61 +121,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         else
         {
             SetSelectedCounter(null);
-        }
-    }
-
-   
-
-    private void HandleMovement()
-    {
-        Vector2 inputVector = gameInput.GetVector2Input();
-        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
-        float moveDistance = moveSpeed * Time.deltaTime;
-        float playerHeight = 2f;
-        float playerRadius = .7f;
-        canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, moveDistance);
-        CheckPoint1 = transform.position;
-        CheckPoint2 = transform.position + Vector3.up * playerHeight;
-        if (!canMove)
-        {
-            // Cannot move towards moveDir
-            
-            // Attempt only X movement, moveDir.x != 0 mean player only interact when input player is forward counter, example when player capsule cast with counter : (1,0) -> interact, but (0,1) not trigger interact
-            Vector3 moveDirX = new Vector3(moveDir.x, 0, 0);
-            canMove = moveDir.x != 0 && !Physics.CapsuleCast(CheckPoint1, CheckPoint2, playerRadius, moveDir, moveDistance);
-
-            if (canMove)
-            {
-                // Can move only on the X
-                moveDir = moveDirX;
-            }
-            else
-            {
-                // Cannot move only on the X
-                
-                // Attempt only Z movement
-                Vector3 moveDirZ = new Vector3(0, 0, moveDir.z);
-                canMove = moveDir.z != 0 && !Physics.CapsuleCast(CheckPoint1, CheckPoint2, playerRadius, moveDir, moveDistance);
-
-                if (canMove)
-                {
-                    moveDir = moveDirZ;
-                }
-                else
-                {
-                    // Cannot move in any direction
-                }
-            }
-        }
-        if (canMove)
-        {
-            transform.position += moveDir * moveDistance;
-        }
-        isWalking = moveDir != Vector3.zero;
-        //transform.position += moveDir * moveSpeed * Time.deltaTime;
-        if (transform.forward != Vector3.zero)
-        {
-            transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
         }
     }
 

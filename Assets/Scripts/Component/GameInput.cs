@@ -78,18 +78,15 @@ public class GameInput : MonoBehaviour
     
     public Vector2 GetVector2Input()
     {
-        //Vector2 inputVectorMove = _playerController.Player.Movement.ReadValue<Vector2>();
+        Vector2 inputVectorMove = _playerController.Player.Movement.ReadValue<Vector2>();
         Vector2 inputVectorLeftJoystick = _playerController.Player.JoystickLeft.ReadValue<Vector2>();
-        
-        /*
-             if (inputVectorMove != Vector2.zero)
+
+        if (inputVectorMove != Vector2.zero)
         {
             //inputVectorMove = inputVectorMove.normalized;
             return inputVectorMove;
         }
-        
-         */
-        
+
         //inputVectorLeftJoystick = inputVectorLeftJoystick.normalized;
         return inputVectorLeftJoystick;
     }

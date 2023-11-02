@@ -7,7 +7,7 @@ public class PlayerAnimator : MonoBehaviour
 {
     private Animator animator;
     private const String IS_WALKING = "IsWalking";
-    [SerializeField] private Player player;
+    [SerializeField] private PlayerMovement playerMovement;
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -15,6 +15,6 @@ public class PlayerAnimator : MonoBehaviour
 
     private void Update()
     {
-        animator.SetBool(IS_WALKING, player.IsWalking());
+        animator.SetBool(IS_WALKING, playerMovement.IsWalking());
     }
 }

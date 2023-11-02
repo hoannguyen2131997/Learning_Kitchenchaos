@@ -15,6 +15,12 @@ public class DeliveryManager : MonoBehaviour
     {
         public int index;
     }
+    
+    public event EventHandler<OnGetCoinPlayerEventArgs> OnGetCoinPlayer; 
+    public class OnGetCoinPlayerEventArgs: EventArgs
+    {
+        public int coinsReceived;
+    }
     public static DeliveryManager Instance { get; private set; }
     [SerializeField] private RecipeListSO _recipeListSo;
     
@@ -23,7 +29,6 @@ public class DeliveryManager : MonoBehaviour
     private float spawnRecipeTimer = 3f;
     private float spawnRecipeTimerMax = 4f;
     private int wattingRecipesMax;
-    private int successfulRecipesAmount;
     private int countItemCurrentRendered;
     private void Awake()
     {
@@ -101,16 +106,20 @@ public class DeliveryManager : MonoBehaviour
 
                 if (plateContentMatchesRecipe)
                 {
-                    // Player delivered the correct recipe! 
-                    successfulRecipesAmount++;
                     //waitingRecipeSOList.RemoveAt(i);
                     UpdateDataListRecipeSOItem(i);
-                    Debug.Log(i);
+                    Debug.Log("Coin: " + waitingRecipeSO.Value);
                     OnRecipeComplete?.Invoke(this, new OnRecipetCompleteAddedEventArgs
                     {
                         index = i
                     });
                     OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
+                    
+                    // Player delivered the correct recipe! 
+                    OnGetCoinPlayer?.Invoke(this, new OnGetCoinPlayerEventArgs
+                    {
+                        coinsReceived = waitingRecipeSO.Value
+                    });
                     return;
                 }
             }
@@ -128,11 +137,6 @@ public class DeliveryManager : MonoBehaviour
         countItemCurrentRendered--;
     }
 
-    public int GetSuccessfulRecipesAmount()
-    {
-        return successfulRecipesAmount;
-    }
-    
     private void CreateListWattingRecipeSOList()
     {
         int countWattingRecipeSOList = RecipeTempletePool.Instance.GetCountRecipeTempletePool();

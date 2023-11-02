@@ -17,3 +17,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bb98ff43ffc6dc64a990cacc95b2e7d1, type: 2}
   - {fileID: 11400000, guid: cb4ee10e7076a9644a0357124f46a84f, type: 2}
   RecipeName: ChesseBurger
+  Value: 3

@@ -21,6 +21,7 @@ public class OptionsUI : MonoBehaviour
         soundEffectButton.onClick.AddListener(() =>
         {
             SoundManager.Instance.ChangeSoundVolume();
+            
             UpdateVisual();
         });
         

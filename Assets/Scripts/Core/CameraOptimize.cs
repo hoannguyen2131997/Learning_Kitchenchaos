@@ -11,4 +11,10 @@ public class CameraOptimize : MonoBehaviour
         //Vector3.Normalize();
         //Camera.main.eventMask = 0;
     }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
 }

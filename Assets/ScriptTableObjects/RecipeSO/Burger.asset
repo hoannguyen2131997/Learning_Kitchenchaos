@@ -15,4 +15,5 @@ MonoBehaviour:
   kitchenObjectSos:
   - {fileID: 11400000, guid: f8a6c7d0e849a214b857e574e41e4171, type: 2}
   - {fileID: 11400000, guid: bb98ff43ffc6dc64a990cacc95b2e7d1, type: 2}
-  RecipeName: Bunger
+  RecipeName: BungerMeat
+  Value: 2

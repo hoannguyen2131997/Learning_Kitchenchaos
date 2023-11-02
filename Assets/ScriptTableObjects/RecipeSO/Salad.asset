@@ -15,4 +15,5 @@ MonoBehaviour:
   kitchenObjectSos:
   - {fileID: 11400000, guid: bb98ff43ffc6dc64a990cacc95b2e7d1, type: 2}
   - {fileID: 11400000, guid: 6023a05f4ccfbea49afc9bc05d1807ff, type: 2}
-  RecipeName: Salad
+  RecipeName: SaladBunger
+  Value: 2
