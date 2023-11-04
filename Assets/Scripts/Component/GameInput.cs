@@ -9,7 +9,6 @@ public class GameInput : MonoBehaviour
     public static GameInput Instance { get; private set; }
     public event EventHandler OnInteractAction;
     public event EventHandler OnInteractAlternateAction;
-    public event EventHandler OnTest;
     public event EventHandler OnPause;
     
     private PlayerController _playerController;
@@ -60,12 +59,7 @@ public class GameInput : MonoBehaviour
     {
         OnPause?.Invoke(this, EventArgs.Empty);
     }
-
-    private void Test_performed(InputAction.CallbackContext obj)
-    {
-        OnTest?.Invoke(this, EventArgs.Empty);
-    }
-
+    
     private void InteractAlternate(InputAction.CallbackContext obj)
     {
         OnInteractAlternateAction?.Invoke(this, EventArgs.Empty);
@@ -78,16 +72,12 @@ public class GameInput : MonoBehaviour
     
     public Vector2 GetVector2Input()
     {
+#if UNITY_EDITOR
         Vector2 inputVectorMove = _playerController.Player.Movement.ReadValue<Vector2>();
+        return inputVectorMove;
+#else
         Vector2 inputVectorLeftJoystick = _playerController.Player.JoystickLeft.ReadValue<Vector2>();
-
-        if (inputVectorMove != Vector2.zero)
-        {
-            //inputVectorMove = inputVectorMove.normalized;
-            return inputVectorMove;
-        }
-
-        //inputVectorLeftJoystick = inputVectorLeftJoystick.normalized;
-        return inputVectorLeftJoystick;
+         return inputVectorLeftJoystick;
+#endif
     }
 }

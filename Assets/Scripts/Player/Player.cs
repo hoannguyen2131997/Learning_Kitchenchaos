@@ -6,9 +6,13 @@ using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour, IKitchenObjectParent
 {
-    public int coins;
+    private int coins;
     public float timer;
-   
+
+    public int GetCoinPlayer()
+    {
+        return coins;
+    }
     public void SavePlayer()
     {
         SaveSystem.SavePlayer(this);

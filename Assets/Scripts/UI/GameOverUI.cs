@@ -19,7 +19,7 @@ public class GameOverUI : MonoBehaviour
     {
         if (KitchenGameManager.Instance.IsGameOver())
         {
-            recipesDeliveredText.text = Player.Instance.coins.ToString();
+            recipesDeliveredText.text = Player.Instance.GetCoinPlayer().ToString();
             Show();
         }
         else

@@ -11,7 +11,7 @@ public class PlayerData
 
     public PlayerData(Player player)
     {
-        coins = player.coins;
+        coins = player.GetCoinPlayer();
         timer = player.timer;
     }
 }
