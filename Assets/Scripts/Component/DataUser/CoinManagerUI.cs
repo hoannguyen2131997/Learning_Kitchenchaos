@@ -27,9 +27,8 @@ public class CoinManagerUI : MonoBehaviour
     public static CoinManagerUI Instance;
     private int coin;
     private List<GameObject> CoinList = new List<GameObject>();
-
     private Tween coinReactionTween;
-
+    
     private void Awake()
     {
         if (Instance == null)
@@ -38,14 +37,14 @@ public class CoinManagerUI : MonoBehaviour
         }
         else
         {
-            Destroy(this);
+            Destroy(Instance);
         }
     }
 
     [Button()]
     private async void CollectionCoins()
     {
-        SetCoin(0);
+        Player.Instance.AddCoinPlayer(0);
         await CollectionCoinsAnimation();
     }
 
@@ -76,6 +75,8 @@ public class CoinManagerUI : MonoBehaviour
                 .SetEase(Ease.InOutElastic)
                 .ToUniTask());
             CoinList.Add(coibInstance);
+            int coinPlayerCurrent = i + 1 + Player.Instance.GetCoinPlayer();
+            UpdateUICoin(coinPlayerCurrent);
             
             await UniTask.Delay(TimeSpan.FromSeconds(0.01f));
         }
@@ -86,10 +87,21 @@ public class CoinManagerUI : MonoBehaviour
         // Animation the reaction when collecting coin
     }
 
-    public void SetCoin(int _coin)
+    public void UpdateUICoin(int index = 0)
     {
-        coin += _coin;
-        coinText.text = coin.ToString();
+        if (index == 0)
+        {
+            coinText.text = Player.Instance.GetCoinPlayer().ToString();
+        }
+        else
+        {
+            coinText.text = index.ToString();
+        }
+    }
+    
+    public void UpdateUICoinForAnimation(int index)
+    {
+        coinText.text = Player.Instance.GetCoinPlayer().ToString();
     }
 
     private async UniTask MoveCoinsTask()
@@ -106,7 +118,7 @@ public class CoinManagerUI : MonoBehaviour
     {
         await CoinList[i].transform.DOMove(endPoint.position, duration).SetEase(Ease.InBack).ToUniTask();
         await ReactToCollectionCoin();
-        SetCoin(1);
+        Player.Instance.AddCoinPlayer(1);
     }
     
     private async UniTask ReactToCollectionCoin()
@@ -117,11 +129,5 @@ public class CoinManagerUI : MonoBehaviour
             await coinReactionTween.ToUniTask();
             coinReactionTween = null;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

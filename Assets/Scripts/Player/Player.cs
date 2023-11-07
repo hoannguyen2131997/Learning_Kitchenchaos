@@ -13,17 +13,15 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     {
         return coins;
     }
-    public void SavePlayer()
+
+    public void SetCoinPlayer(int _coin)
     {
-        SaveSystem.SavePlayer(this);
+        coins = _coin;
     }
-
-    public void LoadPlayer()
+    
+    public void AddCoinPlayer(int _coin)
     {
-        PlayerData data = SaveSystem.LoadPlayer();
-
-        coins = data.coins;
-        timer = data.timer;
+        coins += _coin;
     }
     
     public static Player Instance { get; private set; }
@@ -63,7 +61,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void DeliveryManager_OnGetCoinPlayer(object sender, DeliveryManager.OnGetCoinPlayerEventArgs e)
     {
-        coins += e.coinsReceived;
         CollectionCoins(e.coinsReceived);
     }
     

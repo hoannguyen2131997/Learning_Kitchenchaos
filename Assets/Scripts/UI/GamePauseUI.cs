@@ -29,11 +29,12 @@ public class GamePauseUI : MonoBehaviour
         });
         saveGameButton.onClick.AddListener(() =>
         {
-            Player.Instance.SavePlayer();
+            DataLoadSave.Instance.SaveData();
         });
         loadGameButton.onClick.AddListener(() =>
         {
-            Player.Instance.LoadPlayer();
+            DataLoadSave.Instance.LoadData();
+            CoinManagerUI.Instance.UpdateUICoin();
         });
     }
 
