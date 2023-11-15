@@ -34,8 +34,6 @@ public class KitchenGameManager : MonoBehaviour
     private void Start()
     {
         GameInput.Instance.OnPause += GameInput_OnPause;
-        Application.targetFrameRate = 60;
-
     }
 
     private void GameInput_OnPause(object sender, EventArgs e)
